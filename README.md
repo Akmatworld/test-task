@@ -1,0 +1,2 @@
+# testTask
+Vue, Vuex 
