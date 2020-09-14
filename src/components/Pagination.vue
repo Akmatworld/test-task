@@ -4,7 +4,7 @@
       <ul class="pagination">
         <Button :status="isActivePrev" name="Предыдущая" @buttoclicked="getPrevPagePosts"/>
         <li class="page-item"><span class="page-link custom-hover-background">{{ page }}</span></li>
-        <Button :status="isActiveNext" name="Следуящая" @buttoclicked="getNextPagePosts"/>
+        <Button :status="isActiveNext" name="Следующая" @buttoclicked="getNextPagePosts"/>
       </ul>
     </nav>
   </div>
