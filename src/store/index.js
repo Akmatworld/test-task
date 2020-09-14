@@ -102,7 +102,7 @@ export default new Vuex.Store({
       .then(result => {
         return result.json();
       }).then(posts => {
-        commit('addPostFromApi', posts);
+        joinUsersToPosts(state, posts, commit);
       });
     },
     getNextPage({ state, commit }) {
