@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Loading/>
     <Header/>
     <Pagination/>
     <Posts/>
@@ -11,6 +12,7 @@
 import Posts from './components/Posts';
 import Header from './components/Header';
 import Pagination from './components/Pagination';
+import Loading from './components/Loading';
 import { mapActions, mapState } from 'vuex';
 
 export default {
@@ -18,7 +20,8 @@ export default {
   components: {
     Posts,
     Header,
-    Pagination
+    Pagination,
+    Loading
   },
   computed: mapState(['users']),
   methods: {

@@ -27,7 +27,8 @@ export default new Vuex.Store({
     posts: [],
     users: [],
     isActiveNext: true,
-    isActivePrev: false
+    isActivePrev: false,
+    isLoading: false
   },
   mutations: {
     addPostFromApi(state, posts) {
@@ -75,10 +76,17 @@ export default new Vuex.Store({
     },
     disablePrevLink(state, value) {
       state.isActivePrev = value;
+    },
+    activeLoading(state) {
+      state.isLoading = true;
+    },
+    disableLoading(state) {
+      state.isLoading = false;
     }
   },
   actions: {
     init({ dispatch, state, commit }) {
+      commit('activeLoading');
       dispatch('getFetchUsers')
       .then(result => {
         return result.json();
@@ -89,6 +97,8 @@ export default new Vuex.Store({
         return result.json();
       }).then(posts => {
         joinUsersToPosts(state, posts, commit);
+      }).finally(() => {
+        commit('disableLoading');
       });
     },
     getFetchUsers() {
@@ -98,15 +108,19 @@ export default new Vuex.Store({
       return fetch(`${apiUrl}posts?_page=${state.page}&_limit=${state.selectedSwitcher}`);
     },
     updateSizePostsPerPage({ state, commit }) {
+      commit('activeLoading');
       fetch(`${apiUrl}posts?_page=${state.page}&_limit=${state.selectedSwitcher}`)
       .then(result => {
         return result.json();
       }).then(posts => {
         joinUsersToPosts(state, posts, commit);
+      }).finally(() => {
+        commit('disableLoading');
       });
     },
     getNextPage({ state, commit }) {
       if (Math.ceil(state.totalCntPosts / state.selectedSwitcher) > state.page) {
+        commit('activeLoading');
         fetch(`${apiUrl}posts?_page=${state.page}&_limit=${state.selectedSwitcher}`)
         .then(result => {
           return result.json();
@@ -114,6 +128,8 @@ export default new Vuex.Store({
           if(!!posts.length) {
             joinUsersToPosts(state, posts, commit);
           }
+        }).finally(() => {
+          commit('disableLoading');
         });
 
         commit('incrementPage', 1);
@@ -121,6 +137,7 @@ export default new Vuex.Store({
     },
     getPrevPage({ state, commit }) {
       if (state.page > 1) {
+        commit('activeLoading');
         fetch(`${apiUrl}posts?_page=${state.page}&_limit=${state.selectedSwitcher}`)
         .then(result => {
           return result.json();
@@ -128,6 +145,8 @@ export default new Vuex.Store({
           if(!!posts.length) {
             joinUsersToPosts(state, posts, commit);
           }
+        }).finally(() => {
+          commit('disableLoading');
         });
 
         commit('decrementPage', 1);
